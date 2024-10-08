@@ -27,23 +27,23 @@ function generateNumber(min, max) {
     return Math.ceil(Math.random() * (max - min) + min);
 }
 
-predictionBtn.addEventListener('click', function() {
+function makeForecastList(percent, text) {
+    const forecastCard = forecastItem.content.cloneNode(true);
+    forecastCard.querySelector('p').textContent = 'Вероятность: ' + percent + '%';
+    forecastCard.querySelector('h3').textContent = text;
 
-    function makeForecastList(percent, text) {
-        const forecastCard = forecastItem.content.cloneNode(true);
-        forecastCard.querySelector('p').textContent = 'Вероятность: ' + percent + '%';
-        forecastCard.querySelector('h3').textContent = text;
-
-        if (probability == null && predictionText == null) {
-            return;
-        }
-
-        return forecastCard;
+    if (!probability || !predictionText) {
+        return;
     }
+
+    return forecastCard;
+}
+
+predictionBtn.addEventListener('click', function() {
 
     const addedCard = makeForecastList(probability, predictionText);
 
-    if (typeof addedCard != 'undefined') {
+    if (addedCard) {
         forecastContainer.prepend(addedCard);
     }
 
