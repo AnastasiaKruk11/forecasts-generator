@@ -15,20 +15,40 @@
 /* Для добавления предсказания в список воспользуйся шаблоном forecast-item */
 
 const predictionBtn = document.querySelector('.forecast-btn');
-let currentForecast = document.querySelector('.current-forecast');
-let mainForecast = document.querySelector('h1');
-let mainProbability = currentForecast.querySelector('p');
+const currentForecast = document.querySelector('.current-forecast');
+const mainForecast = document.querySelector('h1');
+const mainProbability = currentForecast.querySelector('p');
 const forecastItem = document.querySelector('#forecast-item');
 const forecastContainer = document.querySelector('.forecasts');
+let probability = null;
+let predictionText = null;
 
 function generateNumber(min, max) {
     return Math.ceil(Math.random() * (max - min) + min);
 }
 
 predictionBtn.addEventListener('click', function() {
+
+    function makeForecastList(percent, text) {
+        const forecastCard = forecastItem.content.cloneNode(true);
+        forecastCard.querySelector('p').textContent = 'Вероятность: ' + percent + '%';
+        forecastCard.querySelector('h3').textContent = text;
+
+        if (probability == null && predictionText == null) {
+            return;
+        }
+
+        return forecastCard;
+    }
+
+    const addedCard = makeForecastList(probability, predictionText);
+
+    if (typeof addedCard != 'undefined') {
+        forecastContainer.prepend(addedCard);
+    }
+
     const predictionNumber = generateNumber(0, 10);
-    const probability = generateNumber(0, 100);
-    let predictionText = '';
+    probability = generateNumber(0, 100);
 
     switch (predictionNumber) {
         case 1:
@@ -65,21 +85,5 @@ predictionBtn.addEventListener('click', function() {
 
     mainForecast.textContent = predictionText;
     mainProbability.textContent = 'Вероятность: ' + probability + '%';
-
-    let textCopy = mainForecast.innerText;
-    let percentCopy = mainProbability.innerText;
-
-
-    function makeForecastList(percent, text) {
-        const forecastCard = forecastItem.content.cloneNode(true);
-        forecastCard.querySelector('p').textContent = percent;
-        forecastCard.querySelector('h3').textContent = text;
-
-        return forecastCard;
-    }
-
-    const addedCard = makeForecastList(percentCopy, textCopy);
-
-    forecastContainer.prepend(addedCard);
 
 })
